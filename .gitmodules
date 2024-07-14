@@ -1,0 +1,6 @@
+[submodule "noq_backend_python"]
+	path = noq_backend_python
+	url = https://github.com/noQ-sweden/noq_backend_python.git
+[submodule "noQ-Frontend"]
+	path = noQ-Frontend
+	url = https://github.com/noQ-sweden/noQ-Frontend

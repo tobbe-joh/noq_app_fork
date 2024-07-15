@@ -6,7 +6,7 @@ server {
     location / {
         uwsgi_pass              ${FRONTEND_HOST}:${FRONTEND_PORT};
         include                 /etc/nginx/uwsgi_params;
-        client_max_body_size    10M;;
+        client_max_body_size    10M;
     }
 
     location /api {

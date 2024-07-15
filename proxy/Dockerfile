@@ -10,11 +10,6 @@ ENV BACKEND_HOST=backend
 ENV BACKEND_PORT=9000
 ENV FRONTEND_HOST=frontend
 ENV FRONTEND_PORT=10000
-ENV HTTP_UPGRADE=$http_upgrade
-ENV HOST=$host
-ENV REMOTE_ADDR=$remote_addr
-ENV PROXY_ADD=$proxy_add_x_forwarded_for
-ENV SCHEMA=$scheme
 
 VOLUME /build
 

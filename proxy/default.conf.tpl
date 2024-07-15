@@ -4,9 +4,7 @@ server {
     server_name localhost;
 
     location / {
-        uwsgi_pass              ${FRONTEND_HOST}:${FRONTEND_PORT};
-        include                 /etc/nginx/uwsgi_params;
-        client_max_body_size    10M;
+        root                    /usr/share/nginx/html;
     }
 
     location /api {

@@ -11,8 +11,6 @@ ENV BACKEND_PORT=9000
 ENV FRONTEND_HOST=frontend
 ENV FRONTEND_PORT=10000
 
-VOLUME /build
-
 USER root
 
 RUN mkdir -p /vol/static && \

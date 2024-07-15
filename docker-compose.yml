@@ -19,10 +19,6 @@ services:
     build:
       context: ./noQ-Frontend
     restart: always
-    volumes:
-      - static-data:/vol/web
-    depends_on:
-      - backend
 
   db:
     image: postgres:16.3-alpine
@@ -49,3 +45,4 @@ services:
 volumes:
   postgres-data:
   static-data:
+

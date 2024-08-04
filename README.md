@@ -28,5 +28,5 @@ When you build and run the container for the first time the database is empty. Y
 
 To update the database with test data run following command.
 
-    docker compose run --rm noq_backend_python sh -c "python manage.py runscript generate_data"
+    docker compose run --rm backend sh -c "python manage.py runscript generate_data"
 

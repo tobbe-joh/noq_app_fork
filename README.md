@@ -1,8 +1,17 @@
 # noq_app_deployment
-Contains files to create docker containers that are ready to be deployed
+Contains files to create docker containers that are ready to be deployed on a server.
 
-## Building the Container
-Before you deploy the docker images and container you need to take following steps.
+## Setting Environment Variables
+In order to run the application you need to set environment variables that are listed in the .env.sample file. You can set the variables in .env file (which should never be shared publicly) or by setting the values in your providers environment.
+
+.env file contains values used by the application to access the database, SECRET_KEY for the backend and selection of backend settings.
+
+To use production settings for backend you need to use following value for the DJANGO_SETTINGS_MODULE variable
+
+    DJANGO_SETTINGS_MODULE=noq_django.settings.prod
+
+## Building and Running the Container
+To run the application on a server you need to run following commands.
 
 After cloning the repo, run following commands to build the container.
 
@@ -10,13 +19,14 @@ After cloning the repo, run following commands to build the container.
     git submodule update
     docker compose build
 
-## Running the Container
-To run the container you need to create .env file with parameters for the database. You can use .env.sample as a template for the .env file.
+To run the application you need to execute following command.
 
-After that you can run the container.
     docker compose up
 
 ## Updating Database with noQ Test Data
+When you build and run the container for the first time the database is empty. You can use the django admin to add data to the database or run the generate_data script in the backend container.
+
 To update the database with test data run following command.
-    docker compose run --rm backend sh -c "python manage.py runscript generate_data"
+
+    docker compose run --rm noq_backend_python sh -c "python manage.py runscript generate_data"
 

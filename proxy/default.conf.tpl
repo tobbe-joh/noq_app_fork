@@ -4,7 +4,7 @@ server {
     server_name localhost;
 
     location / {
-        root                    /frontend-files/build;
+        root                    /frontend/dist;
     }
 
     location /api {

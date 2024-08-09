@@ -19,7 +19,8 @@ services:
     build:
       context: ./noQ-Frontend
     volumes:
-      - static-frontend:/frontend-files
+      - static-frontend:/frontend
+    command: npm run build
     depends_on:
       - backend
 
@@ -44,7 +45,7 @@ services:
       - 80:8000
     volumes:
       - static-data:/vol/web
-      - static-frontend:/frontend-files
+      - static-frontend:/frontend
 
 volumes:
   postgres-data:

@@ -5,6 +5,7 @@ server {
 
     location / {
         root                    /frontend/dist;
+        index                   index.html;
     }
 
     location /api {

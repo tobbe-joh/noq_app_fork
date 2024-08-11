@@ -21,7 +21,7 @@ services:
       context: ./noQ-Frontend
     volumes:
       - static-frontend:/frontend
-    command: npm run build
+    command: npm run build -- --mode prod
     depends_on:
       - backend
 

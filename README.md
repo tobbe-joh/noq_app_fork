@@ -23,6 +23,11 @@ To run the application you need to execute following command.
 
     docker compose up
 
+## Create superuser for the django admin
+To access django admin site you need to create a super user. This can be done with a following command.
+
+    docker compose run --rm backend sh -c "python manage.py createsuperuser"
+
 ## Updating Database with noQ Test Data
 When you build and run the container for the first time the database is empty. You can use the django admin to add data to the database or run the generate_data script in the backend container.
 

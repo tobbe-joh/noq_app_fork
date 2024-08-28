@@ -1,0 +1,59 @@
+name: CI/CD DEPLOYMENT
+
+on:
+  push:
+    branches:
+      - noq-507
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+
+      - name: Test SSH connection
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} "echo 'SSH connection successful!'"
+
+      - name: Build and Deploy
+        if: success()
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} << 'EOF'
+          cd /home/ubuntu/noq_app_deployment
+
+          # Handling submodule changes
+          cd noQ-Frontend
+          git fetch origin
+          git stash push --include-untracked || true  # Save any local changes
+          git reset --hard HEAD || true  # Discard any uncommitted changes
+          git checkout noq-507-front
+          git pull origin noq-507-front
+          cd ..
+
+          # Handling changes in the main repository
+          # git fetch origin
+          # git stash push --include-untracked || true  # Save any local changes
+          # git reset --hard HEAD || true  # Discard any uncommitted changes
+          # git checkout noq-507
+          # git pull origin noq-507
+
+          # Update submodules to match the main repository
+          git submodule update --init --recursive
+
+          # Docker operations
+          # docker-compose down
+          # sudo docker volume rm $(sudo docker volume ls -qf name=static-frontend) || true
+          # docker-compose build
+          # docker-compose up -d
+
+          echo 'Deployment successful!'
+          EOF

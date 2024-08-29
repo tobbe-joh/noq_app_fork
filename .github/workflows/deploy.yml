@@ -12,8 +12,6 @@ jobs:
     steps:
       - name: Checkout repository with submodules
         uses: actions/checkout@v4
-        with:
-          submodules: recursive
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
@@ -30,7 +28,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} << 'EOF'
           cd /home/ubuntu/noq_app_deployment
 
-          # Handling submodule changes
+          # --- Handling submodule changes --- 
           # cd noQ-Frontend
           # git fetch origin
           # git stash push --include-untracked || true  # Save any local changes
@@ -39,19 +37,20 @@ jobs:
           # git pull origin noq-front-507
           # cd ..
 
-          # Handling changes in the main repository
-          # git fetch origin
-          # git stash push --include-untracked || true  # Save any local changes
-          # git reset --hard HEAD || true  # Discard any uncommitted changes
-          # git checkout noq-507
-          # git pull origin noq-507
+          # --- Handling changes in the main repository --- 
+          git fetch origin
+          git stash push --include-untracked || true  # Save any local changes
+          git reset --hard HEAD || true  # Discard any uncommitted changes
+          git checkout noq-507
+          git pull origin noq-507
 
-          # Update submodules to match the main repository
-          # git submodule update --init --recursive
+          # --- Update submodules to match the main repository ---
+          # git submodule init
+          # git submodule update
 
-          # Docker operations
+          # --- Docker operations --- 
           # docker-compose down
-          # sudo docker volume rm $(sudo docker volume ls -qf name=static-frontend) || true
+          # sudo docker volume rm $(sudo docker volume ls -qf name=noq_app_deployment_static-frontend) || true
           # docker-compose build
           # docker-compose up -d
 

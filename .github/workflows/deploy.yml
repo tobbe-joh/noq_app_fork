@@ -30,36 +30,41 @@ jobs:
 
           # --- Handling submodule, FRONT/BACK --- 
           cd noQ-Frontend
-          echo "Fetching FRONTEND submodule... <-----------------"
+          echo "FETCHING FRONTEND SUBMODULE... <-----------------"
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
-          # git checkout noq-front-507
-          # git pull origin noq-front-507
+
+          git checkout main 
+          git pull origin main
+          # git checkout noq-front-507 #<-------- test your branch 
+          # git pull origin noq-front-507 #<-------- test your branch
           cd ..
 
           cd noq_backend_python
-          echo "Fetching BACKEND submodule... <-----------------"
+          echo "FETCHING BACKEND SUBMODULE... <-----------------"
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
           cd ..
 
           # --- Handling changes in the main repository --- 
-          echo "Hanling main... <-----------------"
+          echo "HANDLING MAIN... <-----------------"
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
-          # git checkout noq-507
-          # git pull origin noq-507
+          git checkout main
+          git pull origin main
+          # git checkout noq-507 # <--------  test your branch
+          # git pull origin noq-507 # <-------- test your branch
 
           # --- Update submodules to match the main repository ---
-          echo "submodule inti and update... <-----------------"  
+          echo "SUBMODULE INTI n UPDATE... <-----------------"  
           git submodule init
           git submodule update
 
           # --- Docker operations --- 
-          echo "docker operations... <-----------------"
+          echo "DOCKER OPERATIONS STARTING... <-----------------"
           sudo docker-compose down
           sudo docker volume rm $(sudo docker volume ls -qf name=noq_app_deployment_static-frontend) || true
           sudo docker-compose build

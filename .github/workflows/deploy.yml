@@ -45,14 +45,14 @@ jobs:
           git pull origin noq-507
 
           # --- Update submodules to match the main repository ---
-          # git submodule init
-          # git submodule update
+          git submodule init
+          git submodule update
 
           # --- Docker operations --- 
-          # docker-compose down
-          # sudo docker volume rm $(sudo docker volume ls -qf name=noq_app_deployment_static-frontend) || true
-          # docker-compose build
-          # docker-compose up -d
+          docker-compose down
+          sudo docker volume rm $(sudo docker volume ls -qf name=noq_app_deployment_static-frontend) || true
+          docker-compose build
+          docker-compose up -d
 
           echo 'Deployment successful!'
           EOF

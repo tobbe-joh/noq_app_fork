@@ -34,8 +34,8 @@ jobs:
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
-          git checkout noq-front-507
-          git pull origin noq-front-507
+          # git checkout noq-front-507
+          # git pull origin noq-front-507
           cd ..
 
           cd noq_backend_python
@@ -50,8 +50,8 @@ jobs:
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
-          git checkout noq-507
-          git pull origin noq-507
+          # git checkout noq-507
+          # git pull origin noq-507
 
           # --- Update submodules to match the main repository ---
           echo "submodule inti and update... <-----------------"  

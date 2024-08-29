@@ -31,13 +31,13 @@ jobs:
           cd /home/ubuntu/noq_app_deployment
 
           # Handling submodule changes
-          cd noQ-Frontend
-          git fetch origin
-          git stash push --include-untracked || true  # Save any local changes
-          git reset --hard HEAD || true  # Discard any uncommitted changes
-          git checkout noq-507-front
-          git pull origin noq-507-front
-          cd ..
+          # cd noQ-Frontend
+          # git fetch origin
+          # git stash push --include-untracked || true  # Save any local changes
+          # git reset --hard HEAD || true  # Discard any uncommitted changes
+          # git checkout noq-front-507
+          # git pull origin noq-front-507
+          # cd ..
 
           # Handling changes in the main repository
           # git fetch origin
@@ -47,7 +47,7 @@ jobs:
           # git pull origin noq-507
 
           # Update submodules to match the main repository
-          git submodule update --init --recursive
+          # git submodule update --init --recursive
 
           # Docker operations
           # docker-compose down

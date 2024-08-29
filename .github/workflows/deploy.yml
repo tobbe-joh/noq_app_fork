@@ -30,7 +30,9 @@ jobs:
 
           # --- Handling submodule, FRONT/BACK --- 
           cd noQ-Frontend
+          echo ""
           echo "Fetching FRONTEND submodule..."
+          echo ""
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
@@ -38,14 +40,19 @@ jobs:
           git pull origin noq-front-507
           cd ..
 
-          cd noq-backend-python
+          cd noq_backend_python
+          echo ""
           echo "Fetching BACKEND submodule..."
+          echo ""
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
           cd ..
 
           # --- Handling changes in the main repository --- 
+          echo ""
+          echo "Hanling main..."
+          echo ""
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
@@ -53,12 +60,16 @@ jobs:
           git pull origin noq-507
 
           # --- Update submodules to match the main repository ---
+          echo ""
           echo "submodule inti and update"  
+          echo ""
           git submodule init
           git submodule update
 
           # --- Docker operations --- 
+          echo ""
           echo "docker operations"
+          echo ""
           sudo docker-compose down
           sudo docker volume rm $(sudo docker volume ls -qf name=noq_app_deployment_static-frontend) || true
           sudo docker-compose build

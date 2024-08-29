@@ -28,13 +28,21 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} << 'EOF'
           cd /home/ubuntu/noq_app_deployment
 
-          # --- Handling submodule changes --- 
+          # --- Handling submodule, FRONT/BACK --- 
           cd noQ-Frontend
+          echo "Fetching FRONTEND submodule..."
           git fetch origin
           git stash push --include-untracked || true  # Save any local changes
           git reset --hard HEAD || true  # Discard any uncommitted changes
           git checkout noq-front-507
           git pull origin noq-front-507
+          cd ..
+
+          cd noq-backend-python
+          echo "Fetching BACKEND submodule..."
+          git fetch origin
+          git stash push --include-untracked || true  # Save any local changes
+          git reset --hard HEAD || true  # Discard any uncommitted changes
           cd ..
 
           # --- Handling changes in the main repository --- 
@@ -45,14 +53,16 @@ jobs:
           git pull origin noq-507
 
           # --- Update submodules to match the main repository ---
+          echo "submodule inti and update"  
           git submodule init
           git submodule update
 
           # --- Docker operations --- 
-          docker-compose down
+          echo "docker operations"
+          sudo docker-compose down
           sudo docker volume rm $(sudo docker volume ls -qf name=noq_app_deployment_static-frontend) || true
-          docker-compose build
-          docker-compose up -d
+          sudo docker-compose build
+          sudo docker-compose up -d
 
-          echo 'Deployment successful!'
+          echo 'End of Deployment'
           EOF

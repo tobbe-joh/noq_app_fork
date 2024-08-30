@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout repository with submodules
         uses: actions/checkout@v4
+        with:
+          submodules: true 
 
       - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
@@ -28,40 +30,21 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} << 'EOF'
           cd /home/ubuntu/noq_app_deployment
 
+          # Handle submodule updates
+          echo "FETCHING AND UPDATING SUBMODULES..."
+          git submodule update --init --recursive
+          git submodule foreach 'git pull origin main'
+
+          # Update .env.prod for the frontend service
           cd noQ-Frontend
-          echo "FETCHING FRONTEND SUBMODULE..."
-          git fetch origin
-          git stash push --include-untracked || true
-          git reset --hard HEAD || true
-          git checkout main
-          git pull origin main
-
           echo "SETTING UP .env.prod..."
-          if [ "$BUILD_MODE" = "prod" ]; then
-            rm -f .env.prod
-            echo "NOQ_OS_MOCK_API=false" > .env.prod
-            echo "NOQ_BASE_URL=http://${{ secrets.LIGHTSAIL_STATIC_IP }}/" >> .env.prod
-          fi
-
-          cd ../noq_backend_python
-          echo "FETCHING BACKEND SUBMODULE..."
-          git fetch origin
-          git stash push --include-untracked || true
-          git reset --hard HEAD || true
+          rm -f .env.prod
+          echo "NOQ_OS_MOCK_API=false" > .env.prod
+          echo "NOQ_BASE_URL=http://${{ secrets.LIGHTSAIL_STATIC_IP }}/" >> .env.prod
           cd ..
 
-          echo "HANDLING MAIN..."
-          git fetch origin
-          git stash push --include-untracked || true
-          git reset --hard HEAD || true
-          git checkout main
-          git pull origin main
-
-          echo "SUBMODULE INIT AND UPDATE..."
-          git submodule init
-          git submodule update
-
-          echo "DOCKER OPERATIONS STARTING..."
+          # Docker operations
+          echo "STARTING DOCKER OPERATIONS..."
           sudo docker-compose down
           sudo docker-compose build --no-cache
           sudo docker-compose up -d

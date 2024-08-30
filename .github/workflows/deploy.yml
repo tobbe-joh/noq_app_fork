@@ -28,46 +28,42 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} << 'EOF'
           cd /home/ubuntu/noq_app_deployment
 
-          # --- Handling submodule, FRONT/BACK --- 
           cd noQ-Frontend
-          echo "FETCHING FRONTEND SUBMODULE... <-----------------"
+          echo "FETCHING FRONTEND SUBMODULE..."
           git fetch origin
-          git stash push --include-untracked || true  # Save any local changes
-          git reset --hard HEAD || true  # Discard any uncommitted changes
-
-          git checkout main 
-          git pull origin main
-          # git checkout noq-front-507 #<-------- test your branch [checkout this branch and get "TESTING" on the welcome page]
-          # git pull origin noq-front-507 #<-------- test your branch
-          cd ..
-
-          cd noq_backend_python
-          echo "FETCHING BACKEND SUBMODULE... <-----------------"
-          git fetch origin
-          git stash push --include-untracked || true  # Save any local changes
-          git reset --hard HEAD || true  # Discard any uncommitted changes
-          cd ..
-
-          # --- Handling changes in the main repository --- 
-          echo "HANDLING MAIN... <-----------------"
-          git fetch origin
-          git stash push --include-untracked || true  # Save any local changes
-          git reset --hard HEAD || true  # Discard any uncommitted changes
+          git stash push --include-untracked || true
+          git reset --hard HEAD || true
           git checkout main
           git pull origin main
-          # git checkout noq-507 # <--------  test your branch
-          # git pull origin noq-507 # <-------- test your branch
 
-          # --- Update submodules to match the main repository ---
-          echo "SUBMODULE INTI n UPDATE... <-----------------"  
+          echo "SETTING UP .env.prod..."
+          if [ "$BUILD_MODE" = "prod" ]; then
+            rm -f .env.prod
+            echo "NOQ_OS_MOCK_API=false" > .env.prod
+            echo "NOQ_BASE_URL=http://${{ secrets.LIGHTSAIL_STATIC_IP }}/" >> .env.prod
+          fi
+
+          cd ../noq_backend_python
+          echo "FETCHING BACKEND SUBMODULE..."
+          git fetch origin
+          git stash push --include-untracked || true
+          git reset --hard HEAD || true
+          cd ..
+
+          echo "HANDLING MAIN..."
+          git fetch origin
+          git stash push --include-untracked || true
+          git reset --hard HEAD || true
+          git checkout main
+          git pull origin main
+
+          echo "SUBMODULE INIT AND UPDATE..."
           git submodule init
           git submodule update
 
-          # --- Docker operations --- 
-          echo "DOCKER OPERATIONS STARTING... <-----------------"
+          echo "DOCKER OPERATIONS STARTING..."
           sudo docker-compose down
-          sudo docker volume rm $(sudo docker volume ls -qf name=noq_app_deployment_static-frontend) || true
-          sudo docker-compose build
+          sudo docker-compose build --no-cache
           sudo docker-compose up -d
 
           echo 'End of Deployment'

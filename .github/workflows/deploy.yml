@@ -1,0 +1,53 @@
+name: CI/CD DEPLOYMENT
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: true 
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+
+      - name: Test SSH connection
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} "echo 'SSH connection successful!'"
+
+      - name: Build and Deploy
+        if: success()
+        run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} << 'EOF'
+          cd /home/ubuntu/noq_app_deployment
+
+          # Handle submodule updates
+          echo "FETCHING AND UPDATING SUBMODULES..."
+          git submodule update --init --recursive
+          git submodule foreach 'git pull origin main'
+
+          # Update .env.prod for the frontend service
+          cd noQ-Frontend
+          echo "SETTING UP .env.prod..."
+          rm -f .env.prod
+          echo "NOQ_OS_MOCK_API=false" > .env.prod
+          echo "NOQ_BASE_URL=http://${{ secrets.LIGHTSAIL_STATIC_IP }}/" >> .env.prod
+          cd ..
+
+          # Docker operations
+          echo "STARTING DOCKER OPERATIONS..."
+          sudo docker-compose down
+          sudo docker-compose build --no-cache
+          sudo docker-compose up -d
+
+          echo 'End of Deployment'
+          EOF

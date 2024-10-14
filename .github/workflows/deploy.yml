@@ -32,7 +32,7 @@ jobs:
           
           # Handle submodule updates
           echo "FETCHING AND UPDATING SUBMODULES..."
-          git submodule update --init --recursive --remote --merge
+          git submodule update --init --recursive --remote --merge || git submodule update --init --recursive --remote --force
 
           # Update .env.prod for the frontend service
           cd noQ-Frontend

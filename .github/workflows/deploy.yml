@@ -29,40 +29,11 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} << 'EOF'
           cd /home/ubuntu/noq_app_deployment
-
-          # Stash local changes
-          echo "STASHING LOCAL CHANGES..."
-          pushd noq_backend_python
-          git stash
-          popd
-          
-          pushd noQ-Frontend
-          git stash
-          popd
           
           # Handle submodule updates
           echo "FETCHING AND UPDATING SUBMODULES..."
           git submodule update --init --recursive
           git submodule foreach 'git pull origin main'
-          
-          # Apply the stash
-          echo "APPLYING STASHED CHANGES FOR BACKEND..."
-          pushd noq_backend_python
-          if git stash list | grep -q "stash@"; then
-              git stash apply
-          else
-              echo "No stash entries found in noq_backend_python."
-          fi
-          popd
-          
-          pushd noQ-Frontend
-          if git stash list | grep -q "stash@"; then
-              git stash apply
-          else
-              echo "No stash entries found in noQ-Frontend."
-          fi
-          popd
-
 
           # Update .env.prod for the frontend service
           cd noQ-Frontend

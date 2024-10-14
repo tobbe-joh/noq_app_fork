@@ -32,7 +32,13 @@ jobs:
 
           # Stash local changes
           echo "STASHING LOCAL CHANGES..."
+          pushd noq_backend_python
           git stash
+          popd
+          
+          pushd noQ-Frontend
+          git stash
+          popd
           
           # Handle submodule updates
           echo "FETCHING AND UPDATING SUBMODULES..."
@@ -41,7 +47,22 @@ jobs:
           
           # Apply the stash
           echo "APPLYING STASHED CHANGES FOR BACKEND..."
-          git stash apply || true
+          pushd noq_backend_python
+          if git stash list | grep -q "stash@"; then
+              git stash apply
+          else
+              echo "No stash entries found in noq_backend_python."
+          fi
+          popd
+          
+          pushd noQ-Frontend
+          if git stash list | grep -q "stash@"; then
+              git stash apply
+          else
+              echo "No stash entries found in noQ-Frontend."
+          fi
+          popd
+
 
           # Update .env.prod for the frontend service
           cd noQ-Frontend

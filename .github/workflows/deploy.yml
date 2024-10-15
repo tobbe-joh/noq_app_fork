@@ -30,36 +30,11 @@ jobs:
           ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} << 'EOF'
           cd /home/ubuntu/noq_app_deployment
           
-          # Stash local changes 
-          echo "STASHING LOCAL CHANGES..."
-          cd noq_backend_python
-          git stash
-          cd ..
-          
           # Handle submodule updates
           echo "FETCHING AND UPDATING SUBMODULES..."
           git submodule update --init --recursive
           git submodule foreach 'git pull origin main'
-          
-          # Apply the stash
-          echo "APPLYING STASHED CHANGES FOR BACKEND..."
-          cd noq_backend_python
-          git stash apply || true
-          
-          # Check for conflicts after stash is applied
-          if ! git diff --quiet; then
-            echo "Conflicts detected. Forcing stash changes..."
-            
-            # Forcefully apply the stashed changes by overwriting with the stashed version
-            git checkout --theirs .
-            
-            # Add and commit the changes
-            git add .
-            git commit -m "Force applied stashed changes despite conflicts"
-          fi
-          
-          cd ..
-          
+
           # Update .env.prod for the frontend service
           cd noQ-Frontend
           echo "SETTING UP .env.prod..."

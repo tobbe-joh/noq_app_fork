@@ -11,7 +11,7 @@ services:
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
-      - ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}
     depends_on:
       - db

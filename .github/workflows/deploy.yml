@@ -42,8 +42,10 @@ jobs:
           echo "NOQ_BASE_URL=http://${{ secrets.LIGHTSAIL_STATIC_IP }}/" >> .env.prod
           cd ..
 
-          # Docker operations
+          # Docker operations with SERVER_IP secret
           echo "STARTING DOCKER OPERATIONS..."
+          export SERVER_IP=${{ secrets.SERVER_IP }}
+
           sudo docker-compose down
           sudo docker-compose build --no-cache
           sudo docker-compose up -d

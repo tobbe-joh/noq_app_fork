@@ -45,10 +45,13 @@ jobs:
           # Docker operations with SERVER_IP secret
           echo "STARTING DOCKER OPERATIONS..."
           export SERVER_IP=${{ secrets.SERVER_IP }}
+          export FAKE_SECRET=${{ env.FAKE_SECRET }}
+          echo "HERE IS FAKE SECRET: "FAKE_SECRET
+          echo "SERVER IP: "SERVER_IP
 
           sudo docker-compose down
           sudo docker-compose build --no-cache
-          sudo docker-compose up -d
+          sudo SERVER_IP=${SERVER_IP} FAKE_SECRET=${FAKE_SECRET} docker-compose up -d
 
           echo 'End of Deployment'
           EOF

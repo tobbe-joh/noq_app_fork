@@ -22,7 +22,7 @@ jobs:
 
       - name: Test SSH connection
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.LIGHTSAIL_STATIC_IP }} "echo 'SSH connection successful!'"
+          ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} "echo 'SSH connection successful!'"
 
       - name: Build and Deploy
         if: success()

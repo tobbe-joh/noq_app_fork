@@ -1,6 +1,6 @@
-[submodule "noq_backend_python"]
-	path = noq_backend_python
-	url = https://github.com/noQ-sweden/noq_backend_python.git
-[submodule "noQ-Frontend"]
-	path = noQ-Frontend
-	url = https://github.com/noQ-sweden/noQ-Frontend
+[submodule "noq_backend_fork"]
+  path = noq_backend_python
+  url = https://github.com/tobbe-joh/noq_backend_fork
+[submodule "noQ-Frontend-fork"]
+  path = noQ-Frontend
+  url = https://github.com/tobbe-joh/noQ-Frontend-fork

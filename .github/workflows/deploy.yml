@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "Updating submodules"
           git submodule update --init --recursive --remote
-          echo "Update is now complete"
+          echo "DEPLOY MAIN "
 
 
      

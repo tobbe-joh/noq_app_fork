@@ -1,4 +1,4 @@
-name: DEPLOY ON PULL REQUEST
+PLname: DEPLOY ON PULL REQUEST
 
 on:
   pull_request:
@@ -19,7 +19,7 @@ jobs:
         run: |
           echo "Updating submodules"
           git submodule update --init --recursive --remote
-          echo "Update is now complete"
+          echo "DEPLOYING TO STAGE"
 
 
      

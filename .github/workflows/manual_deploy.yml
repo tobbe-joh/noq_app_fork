@@ -1,4 +1,4 @@
-PLname: DEPLOY ON PULL REQUEST
+name: DEPLOY ON PULL REQUEST
 
 on:
   pull_request:
